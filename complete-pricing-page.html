@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Component</title>
+    
+    <!-- React + ReactDOM + Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Swiper.js (for Carousel) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+    <!-- Font Awesome (for buttons) -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <style>
+        /* Custom styles for carousel */
+        .swiper {
+            padding-bottom: 40px;
+        }
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            transition: transform 0.3s ease-in-out;
+        }
+        .swiper-slide-active {
+            transform: scale(1.05);
+        }
+        .swiper-pagination-bullet {
+            background: black !important;
+            opacity: 0.7 !important;
+        }
+        .swiper-pagination-bullet-active {
+            background: orange !important;
+        }
+        @media (max-width: 640px) {
+            .price-text {
+                font-size: 2.5rem !important;
+                text-align: center !important;
+                width: 100% !important;
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-white text-black">
+    
+    <div id="pricing-root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const PricingCard = ({ title, power, price, details, bgColor, isMonthly, productLink, monthlyLink, buttonHoverColor }) => {
+            const currentLink = isMonthly ? monthlyLink : productLink;
+            
+            return (
+                <div className={`p-6 rounded-xl text-white text-center ${bgColor} shadow-lg transition-all w-[90%] max-w-sm mx-auto`}>
+                    <h2 className="text-2xl font-semibold">{title}</h2>
+                    <p className="text-lg">{power}</p>
+                    <h3 className="text-5xl font-bold my-2 mx-auto text-center price-text whitespace-nowrap">R{price}</h3>
+                    <p className="text-sm">{isMonthly ? "Per Month x72" : "Once Off"}</p>
+                    <div className="mt-4">
+                        {details.map((item, index) => (
+                            <p key={index} className="text-sm"><b>{item.bold}</b> {item.text}</p>
+                        ))}
+                    </div>
+                    <a 
+                        href={currentLink}
+                        className={`mt-6 bg-white text-black px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 mx-auto ${buttonHoverColor} transition-colors duration-300 w-fit`}
+                    >
+                        <i className="fas fa-shopping-cart"></i> Buy Now
+                    </a>
+                </div>
+            );
+        };
+
+        const PricingComponent = () => {
+            const [isMonthly, setIsMonthly] = useState(true);
+            const swiperRef = useRef(null);
+            
+            const togglePricing = () => {
+                setIsMonthly(!isMonthly);
+            };
+
+            const pricingData = [
+                {
+                    title: "Minimalist",
+                    power: "3kw Off-Grid System",
+                    price: isMonthly ? "1,500" : "80,000",
+                    details: [
+                        { bold: "4x Solar Panels", text: "(550W)" },
+                        { bold: "3kw Inverter", text: "" },
+                        { bold: "1x Battery Unit", text: "(3.68kWh 48V)" }
+                    ],
+                    bgColor: "bg-black",
+                    buttonHoverColor: "hover:bg-black hover:text-white",
+                    productLink: "https://xclusivecustoms.tech/product/3kw-off-grid/",
+                    monthlyLink: "https://xclusivecustoms.tech/product/3kw-off-grid-monthly/"
+                },
+                {
+                    title: "Executive",
+                    power: "5kw Off-Grid System",
+                    price: isMonthly ? "2,000" : "120,000",
+                    details: [
+                        { bold: "6x Solar Panels", text: "(550W)" },
+                        { bold: "5kw Inverter", text: "" },
+                        { bold: "1x Battery Unit", text: "(3.68kWh 48V)" }
+                    ],
+                    bgColor: "bg-orange-500",
+                    buttonHoverColor: "hover:bg-orange-500 hover:text-white",
+                    productLink: "https://xclusivecustoms.tech/product/5kw-off-grid/",
+                    monthlyLink: "https://xclusivecustoms.tech/product/5kw-off-grid-monthly/"
+                },
+                {
+                    title: "Premium",
+                    power: "8kw Off-Grid System",
+                    price: isMonthly ? "3,500" : "150,000",
+                    details: [
+                        { bold: "8x Solar Panels", text: "(550W)" },
+                        { bold: "8kw Inverter", text: "" },
+                        { bold: "2x Battery Unit", text: "(3.68kWh 48V)" }
+                    ],
+                    bgColor: "bg-black",
+                    buttonHoverColor: "hover:bg-black hover:text-white",
+                    productLink: "https://xclusivecustoms.tech/product/8kw-off-grid/",
+                    monthlyLink: "https://xclusivecustoms.tech/product/8kw-off-grid-monthly/"
+                }
+            ];
+
+            useEffect(() => {
+                if (!swiperRef.current) {
+                    swiperRef.current = new Swiper('.swiper', {
+                        initialSlide: 1,
+                        loop: false,
+                        slidesPerView: 1.2,
+                        spaceBetween: 10,
+                        centeredSlides: true,
+                        pagination: {
+                            el: ".swiper-pagination",
+                            clickable: true,
+                        },
+                        breakpoints: {
+                            768: { 
+                                slidesPerView: 2.5,
+                                spaceBetween: 15
+                            },
+                            1024: { 
+                                slidesPerView: 3,
+                                spaceBetween: 15
+                            }
+                        }
+                    });
+                }
+            }, []);
+
+            return (
+                <div className="flex flex-col items-center justify-center py-10">
+                    <h1 className="text-3xl font-bold mb-2">Off-Grid Systems Pricing</h1>
+                    <p className="mb-4">Monthly/Once Off</p>
+
+                    <div className="relative inline-block w-14 mb-6">
+                        <input 
+                            type="checkbox" 
+                            id="toggle" 
+                            className="hidden" 
+                            onChange={togglePricing}
+                        />
+                        <label htmlFor="toggle" className="block bg-gray-500 w-full h-6 rounded-full cursor-pointer relative">
+                            <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${isMonthly ? '' : 'translate-x-8'}`}></span>
+                        </label>
+                    </div>
+
+                    <div className="swiper w-full max-w-6xl">
+                        <div className="swiper-wrapper">
+                            {pricingData.map((plan, index) => (
+                                <div key={index} className="swiper-slide">
+                                    <PricingCard {...plan} isMonthly={isMonthly} />
+                                </div>
+                            ))}
+                        </div>
+                        <div className="swiper-pagination"></div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById("pricing-root")).render(<PricingComponent />);
+    </script>
+
+</body>
+</html>
